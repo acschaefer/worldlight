@@ -3,7 +3,7 @@
 This repository contains all files necessary to set up a dynamic desktop background on Debian and its derivates. 
 The desktop background shows an image of the globe and how it is currently illuminated by the sun.
 
-![worldlight_example](/images/worldlight_example.png)
+![worldlight_example](/images/worldlight_example.jpg)
 
 To set up the worldlight desktop background, simply execute the `install.sh` script in the `scripts` folder.
 
