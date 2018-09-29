@@ -1,88 +1,75 @@
+// Generate an image of the globe with its current illumination by the sun.
 <?php
-// Wieviel Uhr?
-$ts = strtotime("now");
+// Get current time.
+$datetime = strtotime("now");
 
-// Berechne einige Konstanten im Voraus:
-// Zeitgleichung in Minuten
-$zg = 1*3600*(-0.1752*sin(0.033430 * gmdate("z",$ts) + 0.5474) - 0.1340*sin(0.018234*gmdate("z",$ts) - 0.1939));
-if ($zg<0){
-    $ts=strtotime("now ".(int)$zg." second",$ts);
-}else{
-    $ts=strtotime("+ ".(int)$zg." second",$ts);
-}    
-// Jahr und Tag berechnen (zwischen 0 und 2 Pi)
-$tagg = ((gmdate("H",$ts)*60+gmdate("i",$ts))*60+gmdate("s",$ts))/43200*pi();
-$jahr = (gmdate("z",$ts)-79.25)/365*2*pi();
-// Erdachse steht um 23.5° schief:
-$alpha= 0.41015237422;
+// Compute constants.
+$time = 1 * 3600 * (-0.1752 * sin(0.033430 * gmdate("z", $datetime) + 0.5474) 
+      - 0.1340*sin(0.018234*gmdate("z",$datetime) - 0.1939));
+if ($time < 0) {
+    $datetime = strtotime("now ".(int)$time." second", $datetime);
+} else {
+    $datetime = strtotime("+ ".(int)$time." second", $datetime);
+}
+$alpha = 0.41015237422;
 $cosalpha = cos($alpha);
 $sinalpha = sin($alpha);
-$cosjahr  = cos($jahr);
-$sinjahr  = sin($jahr);
+$cosyear = cos($year);
+$sinyear = sin($year);
 
-// Berechne Winkel, under dem die Sonne zu sehen ist
-function angle($l,$b){
-    // Breite b und Länge l werden in Grad erwartet
-    global $tagg, $cosalpha, $sinalpha, $cosjahr, $sinjahr;
-    // Bogenmaßumrechnung
-    $b    = (90-$b)/180*pi();
-    $tag  = $tagg-$l/180*pi();
-    // Zenitvektor an der Oberfläche ohne schiefe Erdachse
-    // Sonne steht in Richtung der positiven x-Achse, Erdrotation noch in Richtung der z-Achse
+// Compute year and day, normalized to [0, 2*pi).
+$day = ((gmdate("H", $datetime) * 60 + gmdate("i", $datetime)) * 60 + gmdate("s", $datetime)) 
+       / 43200 * pi();
+$year = (gmdate("z", $datetime) - 79.25) / 365 * 2 * pi();
+
+// Compute solar angle.
+function angle($l, $b) {
+    global $day, $cosalpha, $sinalpha, $cosyear, $sinyear;
+
+    $b = (90 - $b) / 180 * pi();
+    $d = $day - $l / 180 * pi();
     $sinb = sin($b);
-    $r    = array(-1*cos($tag)*$sinb,sin($tag)*$sinb,cos($b));
-    // Erdachse dreht sich zusätzlich im Verlauf des Jahres, darum die etwas
-    // komplizierte Drehmatrix um eine beliebige Drehachse r mit z=0 und |r|=1
-    //$matrix = array(array((1-cos($alpha))*cos($jahr)*cos($jahr)+cos($alpha) ,
-    //              (1-cos($alpha))*cos($jahr)*sin($jahr),
-    //               -1*sin($alpha)*sin($jahr)),
-        //        array((1-cos($alpha))*cos($jahr)*sin($jahr),
-    //              (1-cos($alpha))*sin($jahr)*sin($jahr)+cos($alpha),
-    //              (1-cos($alpha))*cos($jahr)*sin($jahr)),
-    //            array(sin($alpha)*sin($jahr),
-    //              -1*sin($alpha)*cos($jahr),
-    //              cos($alpha)));
+    $r = array(-1 * cos($d) * $sinb, sin($d) * $sinb, cos($b));
 
-    // Führe Drehung aus (berechne nur den wichtigen x-Wert:
-    return $r[0] * ((1-$cosalpha)*$cosjahr*$cosjahr+$cosalpha)
-            + $r[1] * (1-$cosalpha)*$cosjahr*$sinjahr
-            - $r[2] * $sinalpha*$sinjahr;
+    return $r[0] * ((1 - $cosalpha) * $cosyear * $cosyear + $cosalpha)
+           + $r[1] * (1 - $cosalpha) * $cosyear * $sinyear
+           - $r[2] * $sinalpha * $sinyear;
 }
 
-// Einlesen der Bilder aus Dateien:
-$inputfile_day    = "./globe_day.jpg";
-$inputfile_night= "./globe_night.jpg";
-$size        = getimagesize($inputfile_day);
-$im         = imagecreatefromjpeg($inputfile_day);
-$im2         = imagecreatefromjpeg($inputfile_night);
-$col        = imagecolorallocate($im,255,0,0);
-$col2        = imagecolorallocate($im,55,55,55);
+// Read input images.
+$inputfile_day = "../images/globe_day.jpg";
+$inputfile_night = "../images/globe_night.jpg";
+$image_size = getimagesize($inputfile_day);
+$image_day = imagecreatefromjpeg($inputfile_day);
+$image_night = imagecreatefromjpeg($inputfile_night);
 
-// Pixelgröße (je kleiner, desto langsamer)
-$blocksize     = 2;
-for($i=0;$i<$size[0];$i=$i+$blocksize){
-  for($j=0;$j<$size[1];$j=$j+$blocksize){
-    $x = angle(180-($i/$size[0]*360),-90+($j/$size[1]*180));
-    if ($x<-0.11){
-        ImageCopy($im,$im2,$i,$j,$i,$j,$blocksize,$blocksize);
-    }elseif($x<0){    
-        $offset = 13;
-        $ptc = (int)(100-($x+0.11)/(0.11)*(100-$offset))+$offset;
-        if($ptc>100){$ptc=100;}
-        ImageCopyMerge($im,$im2,$i,$j,$i,$j,$blocksize,$blocksize,$ptc);
+// Render illuminated globe.
+$block_size = 1;
+for($i = 0; $i < $image_size[0]; $i = $i + $block_size) {
+    for($j = 0; $j < $image_size[1]; $j = $j + $block_size) {
+        $x = angle(180 - ($i / $image_size[0] * 360), -90 + ($j / $image_size[1] * 180));
+        if ($x < -0.11) {
+            ImageCopy($image_day, $image_night, $i, $j, $i, $j, $block_size, $block_size);
+        } elseif ($x < 0) {    
+            $offset = 13;
+            $ptc = (int)(100 - ($x + 0.11) / (0.11) * (100 - $offset)) + $offset;
+            if ($ptc > 100) {
+                $ptc = 100;
+            }
+            ImageCopyMerge($image_day, $image_night, $i, $j, $i, $j, $block_size, 
+                           $block_size, $ptc);
+        }
     }
-  }
 }
 
-// Ausgabe in Datei:
-$im3 = imagecreatetruecolor(2000,1000);
-imagecopy($im3,$im,0,0,0,50,2000,1000);
-imagestring($im,2,5,1,gmdate("d.m.Y H:i:s ")."UTC",$col);
-imagestring($im,2,675,1,"http://hanno-rein.de",$col);
-$font = 'arial.ttf';
-imagettftext($im, 20, 0, 600, 100, 1, $font, "asdfasdf");
-ImageJPEG ($im,"./worldlight_800.jpg",95);
-//ImageJPEG ($im3,'',90);
-ImageJPEG ($im3,"./worldlight_start.jpg",90);
-
+// Save rendered image to file.
+//$image_day3 = imagecreatetruecolor(1000, 500);
+//imagecopy($image_day3, $image_day, 0, 0, 0, 50, 2000, 1000);
+//imagestring($image_day, 2, 5, 1, gmdate("d.m.Y H:i:s ")."UTC", $col);
+//imagestring($image_day, 2, 675, 1, "http://hanno-rein.de", $col);
+//$font = 'arial.ttf';
+//imagettftext($image_day, 20, 0, 600, 100, 1, $font, "asdfasdf");
+ImageJPEG($image_day, "./worldlight.jpg", 95);
+//ImageJPEG ($image_day3,'',90);
+//ImageJPEG ($image_day3, "./worldlight_start.jpg", 90);
 ?>
