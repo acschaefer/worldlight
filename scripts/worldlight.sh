@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Set XDG environment variables. 
+export DISPLAY=:0
+export XAUTHORITY=/home/krisz/.Xauthority
+export XDG_RUNTIME_DIR=/run/user/1000
+
 # Get the path to the worldlight images directory.
 SCRIPTDIR="/usr/local/bin/worldlight/scripts"
 IMAGEDIR="/usr/local/bin/worldlight/images"
