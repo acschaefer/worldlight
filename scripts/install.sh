@@ -64,12 +64,12 @@ then
 	exit
 fi
 
-# Update the system init script.
-echo -e "${YELLOW}Updating the system init script ...${NOCOLOR}"
-sudo update-rc.d worldlight.sh defaults
+# Reload services.
+echo -e "${YELLOW}Reloading services ...${NOCOLOR}"
+sudo systemctl daemon-reload
 if [[ $? > 0 ]]
 then
-	echo -e "${ORANGE}Warning: failed to update the system init script.${NOCOLOR}"
+	echo -e "${ORANGE}Warning: failed to reload serives.${NOCOLOR}"
 fi
 
 # Start the wallpaper update service.
