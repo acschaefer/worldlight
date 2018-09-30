@@ -42,29 +42,29 @@ fi
 
 # Install the wallpaper script in the system folder that starts scripts on boot.
 echo -e "${YELLOW}Installing wallpaper script ...${NOCOLOR}"
-sudo cp ${SCRIPTDIR}/worldlight.sh /usr/local/bin/ && sudo chmod +x /usr/local/bin/worldlight.sh
+sudo cp ${SCRIPTDIR}/worldlight.sh /usr/local/bin/ && sudo chmod +x /usr/local/bin/gen_worldlight_wallpaper.sh
 if [[ $? > 0 ]]
 then
-	echo -e "${RED}Error: failed to copy scripts/wallpaper.sh to /usr/local/bin/.${NOCOLOR}"
+	echo -e "${RED}Error: failed to copy scripts/gen_worldlight_wallpaper.sh to /usr/local/bin/.${NOCOLOR}"
 	exit
 fi
-sudo cp ${SCRIPTDIR}/worldlight_service.sh /etc/init.d/
+sudo cp ${SCRIPTDIR}/worldlight.sh /etc/init.d/ && sudo chmod +x /etc/init.d/worldlight.sh
 if [[ $? > 0 ]]
 then
-	echo -e "${RED}Error: failed to copy scripts/worldlight_service.sh to /etc/init.d.${NOCOLOR}"
+	echo -e "${RED}Error: failed to copy scripts/worldlight.sh to /etc/init.d.${NOCOLOR}"
 	exit
 fi
 
 # Update the system init script.
 echo -e "${YELLOW}Updating the system init script ...${NOCOLOR}"
-sudo update-rc.d worldlight_service.sh defaults
+sudo update-rc.d worldlight.sh defaults
 if [[ $? > 0 ]]
 then
 	echo -e "${ORANGE}Warning: failed to update the system init script.${NOCOLOR}"
 fi
 
 # Start the wallpaper update service.
-echo -e "${YELLOW}Starting the wallpaper update process ...${NOCOLOR}"
+echo -e "${YELLOW}Starting the wallpaper update service ...${NOCOLOR}"
 service worldlight start
 if [[ $? > 0 ]]
 then
