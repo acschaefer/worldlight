@@ -1,5 +1,6 @@
-// Generate an image of the globe with its current illumination by the sun.
 <?php
+// Generate an image of the globe with its current illumination by the sun.
+
 // Get current time.
 $datetime = strtotime("now");
 
@@ -11,6 +12,8 @@ if ($time < 0) {
 } else {
     $datetime = strtotime("+ ".(int)$time." second", $datetime);
 }
+$day = ((gmdate("H", $datetime) * 60 + gmdate("i", $datetime)) * 60 + gmdate("s", $datetime)) / 43200 * pi();
+$year = (gmdate("z", $datetime) - 79.25) / 365 * 2 * pi();
 $alpha = 0.41015237422;
 $cosalpha = cos($alpha);
 $sinalpha = sin($alpha);
@@ -37,8 +40,9 @@ function angle($l, $b) {
 }
 
 // Read input images.
-$inputfile_day = "../images/globe_day.jpg";
-$inputfile_night = "../images/globe_night.jpg";
+$image_dir = __DIR__ . "/../images/";
+$inputfile_day = $image_dir . "globe_day.jpg";
+$inputfile_night = $image_dir . "globe_night.jpg";
 $image_size = getimagesize($inputfile_day);
 $image_day = imagecreatefromjpeg($inputfile_day);
 $image_night = imagecreatefromjpeg($inputfile_night);
@@ -63,5 +67,6 @@ for($i = 0; $i < $image_size[0]; $i = $i + $block_size) {
 }
 
 // Save rendered image to file.
-ImageJPEG($image_day, "./images/worldlight.jpg", 95);
+$outputfile = $image_dir . "worldlight.jpg";
+ImageJPEG($image_day, $outputfile, 95);
 ?>
