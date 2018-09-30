@@ -19,7 +19,7 @@ DAEMON_USER=$USER
 PIDFILE=/var/run/$DAEMON_NAME.pid
 
 # Load LSB functions.
-source /lib/lsb/init-functions
+. /lib/lsb/init-functions
 
 do_start () {
     log_daemon_msg "Starting system $DAEMON_NAME daemon."
