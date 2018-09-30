@@ -22,5 +22,18 @@ sudo apt-get install php7.0-gd
 # Get the path to the worldlight directory.
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
+xdpyinfo | awk '/dimensions/{print $2}'
+
+convert myfigure.png -resize 200x100 myfigure.jpg
+
 # Add 
 echo 'update_wallpaper.sh' >> /etc/rc.local
+
+sudo nano /home/pi/.config/lxpanel/LXDE-pi/panels/panel
+
+autohide=0
+heightwhenhidden=2
+
+autohide=1
+heightwhenhidden=0
+
