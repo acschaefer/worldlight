@@ -20,7 +20,7 @@ echo -e "${YELLOW}Restarting apache ...${NOCOLOR}"
 sudo service apache2 restart
 if [[ $? > 0 ]]
 then
-	echo -e "${ORANGE}Error: failed to restart apache.${NOCOLOR}"
+	echo -e "${ORANGE}Warning: failed to restart apache.${NOCOLOR}"
 fi
 
 # Install imagemagick in order to scale images to display size.
@@ -28,15 +28,7 @@ echo -e "${YELLOW}Installing imagemagick ...${NOCOLOR}"
 sudo apt-get install imagemagick
 if [[ $? > 0 ]]
 then
-	echo -e "${ORANGE}Error: failed to install imagemagick.${NOCOLOR}"
-fi
-
-# Get the path to the worldlight scripts directory.
-echo -e "${YELLOW}Retrieving path to images ...${NOCOLOR}"
-if [[ $? > 0 ]]
-then
-	echo -e "${RED}Error: failed to retrieve path to images.${NOCOLOR}"
-	exit
+	echo -e "${ORANGE}Warning: failed to install imagemagick.${NOCOLOR}"
 fi
 
 # Install all files.
@@ -59,10 +51,16 @@ fi
 
 # Set up the worldlight service.
 echo -e "${YELLOW}Setting up worldlight service ...${NOCOLOR}"
-sudo rsync ${SCRIPTDIR}/worldlight.sh /etc/init.d/ && sudo chmod +x /etc/init.d/worldlight.sh
+sudo rsync ${SCRIPTDIR}/worldlight.sh /etc/init.d/
 if [[ $? > 0 ]]
 then
 	echo -e "${RED}Error: failed to copy scripts/worldlight.sh to /etc/init.d.${NOCOLOR}"
+	exit
+fi
+sudo chmod +x /etc/init.d/worldlight.sh
+if [[ $? > 0 ]]
+then
+	echo -e "${RED}Error: failed to set permissions for /etc/init.d/worldlight.sh.${NOCOLOR}"
 	exit
 fi
 
