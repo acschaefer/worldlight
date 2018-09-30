@@ -8,7 +8,7 @@ NOCOLOR='\033[0m'
 
 # Install PHP in order to be able to run the script that generates the worldlight image.
 echo -e "${YELLOW}Installing PHP ...${NOCOLOR}"
-sudo apt-get install php7.0 php7.0-gd
+sudo apt-get -y install php7.0 php7.0-gd
 if [[ $? > 0 ]]
 then
 	echo -e "${RED}Error: failed to install PHP.${NOCOLOR}"
@@ -25,7 +25,7 @@ fi
 
 # Install imagemagick in order to scale images to display size.
 echo -e "${YELLOW}Installing imagemagick ...${NOCOLOR}"
-sudo apt-get install imagemagick
+sudo apt-get -y install imagemagick
 if [[ $? > 0 ]]
 then
 	echo -e "${ORANGE}Warning: failed to install imagemagick.${NOCOLOR}"
