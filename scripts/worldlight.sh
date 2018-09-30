@@ -11,7 +11,7 @@
 ### END INIT INFO
 
 DIR=/usr/local/bin/worldlight/script
-DAEMON=$DIR/gen_worldlight_wallpaper.sh
+DAEMON=$DIR/worldlight_wallpaper.sh
 DAEMON_NAME=worldlight
 DAEMON_USER=$USER
 DAEMON_OPTS=""
