@@ -13,4 +13,3 @@ convert ${IMAGEDIR}/globe_night_original.jpg -resize $DISPSIZE ${IMAGEDIR}/globe
 
 # Update the wallpaper.
 pcmanfm --set-wallpaper ${IMAGEDIR}/worldlight.jpg
-

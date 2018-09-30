@@ -51,7 +51,7 @@ fi
 
 # Install worldlight cron job.
 echo -e "${YELLOW}Installing worldlight cron job ...${NOCOLOR}"
-CRONCMD=/usr/local/bin/worldlight/script/worldlight_wallpaper.sh
+CRONCMD="/usr/local/bin/worldlight/scripts/worldlight_wallpaper.sh"
 CRONJOB="* * * * * ${USER} ${CRONCMD}"
 ( crontab -l | grep -v -F "$CRONCMD" ; echo "$CRONJOB" ) | crontab -
 if [[ $? > 0 ]]
