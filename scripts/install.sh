@@ -33,22 +33,33 @@ fi
 
 # Get the path to the worldlight scripts directory.
 echo -e "${YELLOW}Retrieving path to images ...${NOCOLOR}"
-SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 if [[ $? > 0 ]]
 then
 	echo -e "${RED}Error: failed to retrieve path to images.${NOCOLOR}"
 	exit
 fi
 
-# Install the wallpaper script in the system folder that starts scripts on boot.
-echo -e "${YELLOW}Installing wallpaper script ...${NOCOLOR}"
-sudo cp ${SCRIPTDIR}/gen_worldlight_wallpaper.sh /usr/local/bin/ && sudo chmod +x /usr/local/bin/gen_worldlight_wallpaper.sh
+# Install all files.
+echo -e "${YELLOW}Installing worldlight ...${NOCOLOR}"
+INSTALLDIR=/usr/local/bin/worldlight
+mkdir ${INSTALLDIR}
 if [[ $? > 0 ]]
 then
-	echo -e "${RED}Error: failed to copy scripts/gen_worldlight_wallpaper.sh to /usr/local/bin/.${NOCOLOR}"
+	echo -e "${RED}Error: failed to create directory ${INSTALLDIR}.${NOCOLOR}"
 	exit
 fi
-sudo cp ${SCRIPTDIR}/worldlight.sh /etc/init.d/ && sudo chmod +x /etc/init.d/worldlight.sh
+SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+MAINDIR=${SCRIPTDIR}/..
+cp ${MAINDIR}/ ${INSTALLDIR}/
+if [[ $? > 0 ]]
+then
+	echo -e "${RED}Error: failed to copy directory ${MAINDIR} to ${INSTALLDIR}.${NOCOLOR}"
+	exit
+fi
+
+# Set up the worldlight service.
+echo -e "${YELLOW}Setting up worldlight service ...${NOCOLOR}"
+sudo mv ${SCRIPTDIR}/worldlight.sh /etc/init.d/ && sudo chmod +x /etc/init.d/worldlight.sh
 if [[ $? > 0 ]]
 then
 	echo -e "${RED}Error: failed to copy scripts/worldlight.sh to /etc/init.d.${NOCOLOR}"
