@@ -1,0 +1,24 @@
+### BEGIN INIT INFO
+# Provides:          update_wallpaper.sh
+# Required-Start:    $remote_fs $syslog $time
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Worldlight wallpaper update service
+# Description:       Updates the worldlight wallpaper every minute.
+### END INIT INFO
+
+case "$1" in
+  start)
+    ./worldlight.sh &
+    ;;
+  stop)
+    pkill -f worldlight.sh
+    ;;
+  *)
+    echo "Usage: /etc/init.d/worldlight {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0

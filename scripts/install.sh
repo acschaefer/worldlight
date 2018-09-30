@@ -45,7 +45,13 @@ echo -e "${YELLOW}Installing wallpaper script ...${NOCOLOR}"
 sudo cp ${SCRIPTDIR}/worldlight.sh /etc/init.d/ && sudo chmod +x /etc/init.d/worldlight.sh
 if [[ $? > 0 ]]
 then
-	echo -e "${RED}Error: failed to install wallpaper script.${NOCOLOR}"
+	echo -e "${RED}Error: failed to copy scripts/wallpaper.sh to /etc/init.d.${NOCOLOR}"
+	exit
+fi
+sudo cp ${SCRIPTDIR}/worldlight /etc/init.d/
+if [[ $? > 0 ]]
+then
+	echo -e "${RED}Error: failed to copy scripts/wallpaper to /etc/init.d.${NOCOLOR}"
 	exit
 fi
 
