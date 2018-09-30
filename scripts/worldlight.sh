@@ -10,7 +10,7 @@
 # Description:       Updates the worldlight wallpaper every minute.
 ### END INIT INFO
 
-DIR=/usr/local/bin
+DIR=/usr/local/bin/worldlight/script
 DAEMON=$DIR/gen_worldlight_wallpaper.sh
 DAEMON_NAME=worldlight
 DAEMON_USER=$USER
