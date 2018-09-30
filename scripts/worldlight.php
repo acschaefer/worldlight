@@ -63,13 +63,5 @@ for($i = 0; $i < $image_size[0]; $i = $i + $block_size) {
 }
 
 // Save rendered image to file.
-//$image_day3 = imagecreatetruecolor(1000, 500);
-//imagecopy($image_day3, $image_day, 0, 0, 0, 50, 2000, 1000);
-//imagestring($image_day, 2, 5, 1, gmdate("d.m.Y H:i:s ")."UTC", $col);
-//imagestring($image_day, 2, 675, 1, "http://hanno-rein.de", $col);
-//$font = 'arial.ttf';
-//imagettftext($image_day, 20, 0, 600, 100, 1, $font, "asdfasdf");
-ImageJPEG($image_day, "./worldlight.jpg", 95);
-//ImageJPEG ($image_day3,'',90);
-//ImageJPEG ($image_day3, "./worldlight_start.jpg", 90);
+ImageJPEG($image_day, "./images/worldlight.jpg", 95);
 ?>
