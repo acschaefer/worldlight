@@ -42,12 +42,19 @@ fi
 
 # Install the wallpaper script in the system folder that starts scripts on boot.
 echo -e "${YELLOW}Installing wallpaper script ...${NOCOLOR}"
-sudo sed -i '/update_wallpaper.sh/d' /etc/rc.local
-sudo sed -i "s#exit 0#${COMMENT}\n${SCRIPTDIR}/update_wallpaper.sh\nexit 0#g" /etc/rc.local
+sudo cp ${SCRIPTDIR}/worldlight.sh /etc/init.d/ && sudo chmod +x /etc/init.d/worldlight.sh
 if [[ $? > 0 ]]
 then
-	echo -e "${RED}Error: failed to install image generation script.${NOCOLOR}"
+	echo -e "${RED}Error: failed to install wallpaper script.${NOCOLOR}"
 	exit
+fi
+
+# Update the system init script.
+echo -e "${YELLOW}Updating the system init script ...${NOCOLOR}"
+sudo update-rc.d worldlight.sh defaults
+if [[ $? > 0 ]]
+then
+	echo -e "${ORANGE}Warning: failed to update the system init script.${NOCOLOR}"
 fi
 
 # Start wallpaper script as  a background process.
