@@ -8,7 +8,7 @@ NOCOLOR='\033[0m'
 
 # Install PHP in order to be able to run the script that generates the worldlight image.
 echo -e "${YELLOW}Installing PHP ...${NOCOLOR}"
-sudo apt-get install php7.0
+sudo apt-get install php7.0-gd
 if [[ $? > 0 ]]
 then
 	echo -e "${RED}Error: failed to install PHP.${NOCOLOR}"
@@ -42,7 +42,7 @@ fi
 # Install all files.
 echo -e "${YELLOW}Installing worldlight ...${NOCOLOR}"
 INSTALLDIR=/usr/local/bin/worldlight
-mkdir ${INSTALLDIR}
+sudo mkdir -p ${INSTALLDIR}
 if [[ $? > 0 ]]
 then
 	echo -e "${RED}Error: failed to create directory ${INSTALLDIR}.${NOCOLOR}"
@@ -50,7 +50,7 @@ then
 fi
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 MAINDIR=${SCRIPTDIR}/..
-cp ${MAINDIR}/ ${INSTALLDIR}/
+sudo rsync -avzh --include="scripts" --exclude="worldlight.sh" --include="images" --exclude="worldlight_example.jpg" ${MAINDIR}/ ${INSTALLDIR}/
 if [[ $? > 0 ]]
 then
 	echo -e "${RED}Error: failed to copy directory ${MAINDIR} to ${INSTALLDIR}.${NOCOLOR}"
@@ -59,7 +59,7 @@ fi
 
 # Set up the worldlight service.
 echo -e "${YELLOW}Setting up worldlight service ...${NOCOLOR}"
-sudo mv ${SCRIPTDIR}/worldlight.sh /etc/init.d/ && sudo chmod +x /etc/init.d/worldlight.sh
+sudo rsync ${SCRIPTDIR}/worldlight.sh /etc/init.d/ && sudo chmod +x /etc/init.d/worldlight.sh
 if [[ $? > 0 ]]
 then
 	echo -e "${RED}Error: failed to copy scripts/worldlight.sh to /etc/init.d.${NOCOLOR}"
@@ -76,20 +76,10 @@ fi
 
 # Start the wallpaper update service.
 echo -e "${YELLOW}Starting the wallpaper update service ...${NOCOLOR}"
-service worldlight start
+sudo service worldlight start
 if [[ $? > 0 ]]
 then
 	echo -e "${ORANGE}Warning: failed to start the wallpaper update service.${NOCOLOR}"
-fi
-
-# Disable screen blanking.
-echo -e "${YELLOW}Disabling screen blanking ...${NOCOLOR}"
-XCMD="xserver-command=X -s 0 dpms"
-sudo sed -i "/xserver-command=X -s 0 dpms/d" /etc/lightdm/lightdm.conf
-echo "xserver-command=X -s 0 dpms" | sudo tee -a /etc/lightdm/lightdm.conf
-if [[ $? > 0 ]]
-then
-	echo -e "${ORANGE}Warning: failed to disable screen blanking.${NOCOLOR}"
 fi
 
 # Return success message.
