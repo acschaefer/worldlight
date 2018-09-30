@@ -42,7 +42,7 @@ fi
 
 # Install the wallpaper script in the system folder that starts scripts on boot.
 echo -e "${YELLOW}Installing wallpaper script ...${NOCOLOR}"
-sudo cp ${SCRIPTDIR}/worldlight.sh /usr/local/bin/ && sudo chmod +x /usr/local/bin/gen_worldlight_wallpaper.sh
+sudo cp ${SCRIPTDIR}/gen_worldlight_wallpaper.sh /usr/local/bin/ && sudo chmod +x /usr/local/bin/gen_worldlight_wallpaper.sh
 if [[ $? > 0 ]]
 then
 	echo -e "${RED}Error: failed to copy scripts/gen_worldlight_wallpaper.sh to /usr/local/bin/.${NOCOLOR}"
