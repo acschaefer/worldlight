@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Set XDG environment variables. 
+# Set XDG environment variables to allow cron to access the display. 
 export DISPLAY=:0
 export XAUTHORITY=/home/krisz/.Xauthority
 export XDG_RUNTIME_DIR=/run/user/1000
