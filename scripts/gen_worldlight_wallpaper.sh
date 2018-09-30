@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Get the path to the worldlight images directory.
-IMAGEDIR="$/usr/local/bin/worldlight/images"
+SCRIPTDIR="/usr/local/bin/worldlight/scripts"
+IMAGEDIR="/usr/local/bin/worldlight/images"
 
 # Retrieve the display size.
 DISPSIZE="$(xdpyinfo | awk '/dimensions/{print $2}')"
