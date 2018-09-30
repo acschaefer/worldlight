@@ -52,7 +52,7 @@ fi
 # Install worldlight cron job.
 echo -e "${YELLOW}Installing worldlight cron job ...${NOCOLOR}"
 CRONCMD="/usr/local/bin/worldlight/scripts/worldlight.sh"
-CRONJOB="* * * * * ${USER} ${CRONCMD} >> ~/cron.wordlight.log 2>&1"
+CRONJOB="* * * * * ${CRONCMD} >> /var/log/wordlight.log 2>&1"
 ( crontab -l | grep -v -F "$CRONCMD" ; echo "$CRONJOB" ) | crontab -
 if [[ $? > 0 ]]
 then
