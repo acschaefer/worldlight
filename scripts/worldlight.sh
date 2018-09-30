@@ -14,16 +14,16 @@ DIR=/usr/local/bin/worldlight/script
 DAEMON=$DIR/worldlight_wallpaper.sh
 DAEMON_NAME=worldlight
 DAEMON_USER=$USER
-DAEMON_OPTS=""
 
 # Define where to store the process ID of the script when it is running.
 PIDFILE=/var/run/$DAEMON_NAME.pid
 
-. /lib/lsb/init-functions
+# Load LSB functions.
+source /lib/lsb/init-functions
 
 do_start () {
     log_daemon_msg "Starting system $DAEMON_NAME daemon."
-    start-stop-daemon --start --background --pidfile $PIDFILE --make-pidfile --user $DAEMON_USER --chuid $DAEMON_USER --startas $DAEMON -- $DAEMON_OPTS
+    start-stop-daemon --start --background --pidfile $PIDFILE --make-pidfile --user $DAEMON_USER --chuid $DAEMON_USER --startas $DAEMON
     log_end_msg $?
 }
 do_stop () {
