@@ -42,7 +42,7 @@ then
 fi
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 MAINDIR=${SCRIPTDIR}/..
-sudo rsync -avzh --exclude="worldlight.sh" --exclude="wordlight_original.php" --exclude="worldlight_example.jpg" ${MAINDIR}/scripts ${MAINDIR}/images ${INSTALLDIR}
+sudo rsync -avzh --exclude="install.sh" --exclude="wordlight_original.php" --exclude="worldlight_example.jpg" ${MAINDIR}/scripts ${MAINDIR}/images ${INSTALLDIR}
 if [[ $? > 0 ]]
 then
 	echo -e "${RED}Error: failed to copy directory ${MAINDIR} to ${INSTALLDIR}.${NOCOLOR}"
