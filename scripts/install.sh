@@ -15,7 +15,7 @@ then
 	exit
 fi
 
-# Restart apache.
+# Restart apache in order for PHP to work right away.
 echo -e "${YELLOW}Restarting apache ...${NOCOLOR}"
 sudo service apache2 restart
 if [[ $? > 0 ]]
@@ -49,35 +49,15 @@ then
 	exit
 fi
 
-# Set up the worldlight service.
-echo -e "${YELLOW}Setting up worldlight service ...${NOCOLOR}"
-sudo rsync ${SCRIPTDIR}/worldlight.sh /etc/init.d/
+# Install worldlight cron job.
+echo -e "${YELLOW}Installing worldlight cron job ...${NOCOLOR}"
+CRONCMD=/usr/local/bin/worldlight/script/worldlight_wallpaper.sh
+CRONJOB="* * * * * ${USER} ${CRONCMD}"
+( crontab -l | grep -v -F "$CRONCMD" ; echo "$CRONJOB" ) | crontab -
 if [[ $? > 0 ]]
 then
-	echo -e "${RED}Error: failed to copy scripts/worldlight.sh to /etc/init.d.${NOCOLOR}"
+	echo -e "${RED}Error: failed to install worldlight cron job.${NOCOLOR}"
 	exit
-fi
-sudo chmod +x /etc/init.d/worldlight.sh
-if [[ $? > 0 ]]
-then
-	echo -e "${RED}Error: failed to set permissions for /etc/init.d/worldlight.sh.${NOCOLOR}"
-	exit
-fi
-
-# Reload services.
-echo -e "${YELLOW}Reloading services ...${NOCOLOR}"
-sudo systemctl daemon-reload
-if [[ $? > 0 ]]
-then
-	echo -e "${ORANGE}Warning: failed to reload serives.${NOCOLOR}"
-fi
-
-# Start the wallpaper update service.
-echo -e "${YELLOW}Starting the wallpaper update service ...${NOCOLOR}"
-sudo service worldlight start
-if [[ $? > 0 ]]
-then
-	echo -e "${ORANGE}Warning: failed to start the wallpaper update service.${NOCOLOR}"
 fi
 
 # Return success message.
