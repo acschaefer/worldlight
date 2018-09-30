@@ -8,7 +8,7 @@ NOCOLOR='\033[0m'
 
 # Install PHP in order to be able to run the script that generates the worldlight image.
 echo -e "${YELLOW}Installing PHP ...${NOCOLOR}"
-sudo apt-get install php7.0-gd
+sudo apt-get install php7.0 php7.0-gd
 if [[ $? > 0 ]]
 then
 	echo -e "${RED}Error: failed to install PHP.${NOCOLOR}"
@@ -50,7 +50,7 @@ then
 fi
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 MAINDIR=${SCRIPTDIR}/..
-sudo rsync -avzh --include="scripts" --exclude="worldlight.sh" --include="images" --exclude="worldlight_example.jpg" ${MAINDIR}/ ${INSTALLDIR}/
+sudo rsync -avzh --exclude="worldlight.sh" --exclude="worldlight_example.jpg" ${MAINDIR}/scripts ${MAINDIR}/images ${INSTALLDIR}
 if [[ $? > 0 ]]
 then
 	echo -e "${RED}Error: failed to copy directory ${MAINDIR} to ${INSTALLDIR}.${NOCOLOR}"
